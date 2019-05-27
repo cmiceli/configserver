@@ -1,8 +1,10 @@
 package configserver
 
 import (
+	"encoding/json"
 	"errors"
 	"log"
+	"os"
 	"time"
 )
 
@@ -51,7 +53,7 @@ func (m *FSStorage) Get(identifier string) (Config, error) {
 	f, err := os.Open(m.dir + identifier)
 	if err != nil {
 		log.Printf("FSStorage: failed to open %s with %v", identifier, err)
-		return err
+		return Config{}, err
 	}
 	defer f.Close()
 	dec := json.NewDecoder(f)
@@ -80,7 +82,7 @@ func (m *FSStorage) Set(identifier string, cfg Config) error {
 func (m *FSStorage) LastUpdate(identifier string) (time.Time, error) {
 	f, err := os.Lstat(m.dir + identifier)
 	if err != nil {
-		return nil, err
+		return time.Time{}, err
 	}
 	return f.ModTime(), nil
 }
