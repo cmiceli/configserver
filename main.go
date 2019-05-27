@@ -7,7 +7,7 @@ import (
 )
 
 func main() {
-	store := configserver.NewMemStorage()
+	store := configserver.NewFSStorage("./")
 	httpServer := configserver.NewHTTPConfigServer(store)
 	log.Fatal(http.ListenAndServe(":8000", httpServer))
 }
